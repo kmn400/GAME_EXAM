@@ -49,7 +49,6 @@
                 setTimeout(gunba_start, random_speed -1000);
             });
         }
-
         //마리오에 군바가 닿았을 때, 마리오 사망창 뜨게 하는 함수
         function mario_down() {
             var beat = Number($('#gb_block').css('left').replace('px', ''));
@@ -57,9 +56,7 @@
                 console.log(beat, jump);
                 alert('마리오 사망');
             }
-            
         }
-
         $('body').keydown(function(){
             // 37번 if문은 마리오에 군바가 닿는 위치를 파악하는 것. 따로 캐릭터에 미치는 영향은 없음.
             if(event.keyCode == "37" && jump == 0) { 
@@ -67,7 +64,6 @@
                         $("#gb_block").css("left","-=10px");
                         console.log($("#gb_block").css("left"))
                     }
-
             if(event.keyCode == '32' && jump == 0){
                 jump = 1;
                 $('#mario_block').animate({'bottom':'100px'},200).animate({'bottom':'10px'},200,function(){
@@ -78,6 +74,5 @@
         setTimeout(gunba_start, 1000);
         //마리오가 사망했는지 여부를 실시간으로 확인해주는 함수.
         setInterval(mario_down, 50);
-        
     </script>
 </html>
