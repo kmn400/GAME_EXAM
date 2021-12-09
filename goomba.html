@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>game1</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous">
+        </script>
+    </head>
+    <style>
+        #gb{
+            width:100px;
+        }
+        #bg{
+            border:1px solid black;
+            width:100%;
+            height:100%;
+            position: relative;
+        }
+        #gb_block{
+            position: absolute;
+            right:-10px;
+            bottom:10px;
+        }
+    </style>
+    <body>
+    <div id='bg'>
+        <div id = 'gb_block'><img id = 'gb' src="gb.gif"/></div>
+    </div>
+    </body>
+    <script>
+        var first = 0;
+
+        function gunba_start(){
+            let random_speed = Math.floor(Math.random*1000 + 2000)
+
+            $('gb_block').animate({'left':'0px'}, random_speed, function(){
+                $('#gb_block').css('left','');
+                $()
+                setTimeout(gunba_start, random_speed -1000);
+            });
+            
+        }
+            setTimeout(gunba_start, 1000);
+            
+    </script>
+</html>
