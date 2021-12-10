@@ -23,8 +23,9 @@
 
         #main {
             margin: auto;
+            display: none;
             border: 1px solid #000;
-            width: 950px;
+            width: 100%;
             height: 100%;
             position: relative;
         }
@@ -45,26 +46,113 @@
             left: 50px;
             bottom: 10px;
         }
-        #num {
+        #score {
             position: absolute;
             top: 50%;
             left: 40%;
+        }
+        #gameover {
+            position: absolute;
+            display: none;
+            margin: auto;
+            border: 1px solid #000;
+            width: 100%;
+            height: 100%;
+        }
+        #text {
+            position: absolute;
+            top: 50%;
+            left: 46.5%;
+            font-size: xx-large;
+
+        }
+        #regame1 {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            size: 15rem;
+        }
+        #first{
+            position: absolute;
+            display: '';
+            margin: auto;
+            border: 1px solid #000;
+            width: 100%;
+            height: 100%;
+        }
+        #firsttext {
+            position: absolute;
+            top: 20%;
+            left: 40%;
+            font-size: xx-large;
+        }
+        #secondtext {
+            position: absolute;
+            top: 28%;
+            left: 40%;
+            font-size: xx-large;
+        }
+        #grey {
+            width: 200px;
+        }
+        #firstimg {
+            position: absolute;
+            top: 40%;
+            left: 42%;
+        }
+        #start1 {
+            position: absolute;
+            top: 69%;
+            left: 45%;
+            size: 15rem;
+            height: 50px;
+            width: 150px;
         }
     </style>
     <body>
 
         <div id="main">
-            <div id = 'num'>점수 : <input type="text" id="score"/></div>
+            <div id="score">점수 : </div>
             <div id="mario_block"><img id="mario" src="man.gif"></div>
             <div id="gumba_block"><img id="gumba" src="gb.gif"></div>
             <div id="killer_block"><img id="killer" src="killer.jpeg"></div>
         </div>
+        <div id = 'gameover'>
+            <p id ='text'>GAME OVER</p>
+            <button name = 'regame' id ='regame1'>다시하기</button>
+        </div>
+        <div id = 'first'>
+            <p id ='firsttext'>자바스크립트 마리오</p>
+            <p id ='secondtext'>개발자 : 김민호</p>
+            <div id="firstimg"><img id="grey" src="그레이몬.png"></div>
+            <button name = 'start' id ='start1'>시작하기</button>
+        </div>
+
+        <!-- 
+
+        <div id="close">
+            게임오버<br/>
+            <button class="start">게임다시하기</button>
+        </div>
+
+        <div id="start">
+            자바스크립트 마리오
+            <br/>
+            개발자 송동민
+            <br/>
+            <button class="start">게임시작</button>
+        </div>
+
+         -->
         
     </body>
     <script>
+
+
+
         /*
         
-        <킬러가 굼바와 만났을 때 굼바 죽게 하기>
+<킬러가 굼바와 만났을 때 굼바 죽게 하기>
 
          - 초기화(마리오가 점프했을 때, 또 점프하는 것을 방지하는 것과 같은 역할)
          - 군바 위치를 알아야 함
@@ -77,7 +165,7 @@
 
         /*
         
-        <점수 매기기>
+<점수 매기기>
         - 우선 div로 score 내용과 위치를 꾸린다.
 
             -> 변수인 점수를 HTML에 위치한 DIV에 넣는 방법
@@ -133,11 +221,78 @@
                 
         */
 
+        /*
+<화면 로직>
+
+        - 화면 로직의 핵심은 '버튼'과 'CSS_display' 속성이다. 
+        - 버튼을 눌렀을 때, 자동으로 화면을 사라지게 만들면 화면 로직을 구성할 수 있다.
+
+        */
+
+            /*    
+<굼바 죽는 거>
+                : 마리오와 굼바가 겹쳐지게 하는 걸 고려해서 굼바를 사라지게 하면 
+                  굼바 죽는 걸 고안할 수 있음. 
+
+<var jump를 만든 이유>
+    의문이 든 이유는, jump 변수는 script 내에서 true/false 만 나오는데,
+    어떤 이유에서 var jump가 필요하게 된 것인지 궁금해졌음.
+
+    -> var jump는 스페이스바(키코드 32)를 빠르게 연속해서 여러번 눌렀을 때, 
+    딜레이 되는 부분을 잡아주기위한 것이 주된 목적임.
+
+    -> 이 외에도 마리오의 점프 유무에 따라, 점수를 주거나, 죽이거나 하는 조건에
+    다양하게 사용될 수 있기에, var jump를 설정하였음.
 
 
+<var killer를 만든 이유>
+    의문이 든 이유는, jump 변수와 동일하게 killer 변수를 지정했지만,
+    이 변수가 어떤 역할을 하는지 의문이 들었음.
+    -> 
+
+<var score를 만든 이유>
+    점수가 발생하여 변동이 되면 한꺼번에 처리하기 위해 만듦.
+
+        */
         var jump = false;
         var killer = false;
-        var scoreNumber = 0;
+        var score = 0;
+/*
+        function start() { //시작화면
+
+        $("#start").show();
+        $("#main").hide();
+        $("#close").hide();
+
+        }
+
+        function close() { // 게임오버 화면
+
+        $("#start").hide();
+        $("#main").hide();
+        $("#close").show();
+        }
+
+        function game() {  // 게임중 화면
+
+        $("#start").hide();
+        $("#main").show();
+        $("#close").hide();
+
+        score = 0;
+
+
+        // 원래 맨 아래에 있었는데, 게임중일 때만 동작하기위해
+        // 게임 중 화면 함수 아래로 잘라 넣음.
+        setTimeout(gumba_start, 1000);
+        setInterval(mario_down, 10);
+        setInterval(gumba_down, 10);
+        setInterval(set_score, 10);
+
+        }
+*/
+
+        
         function gumba_start() {
             $("#mario_block").show(100);
             $jump = false;
@@ -148,12 +303,15 @@
             $("#gumba_block").animate({
                 "left": "0px"
             }, random_speed, function () {
+                let alive = $('#mario_block').css('display');
+                if(alive == 'block'){
+                    score += 100;
+                }
                 $("#gumba_block").css("left", "");
                 $("#gumba_block").css("right", "10px");
                 $("#gumba_block").hide();
                 setTimeout(gumba_start, random_speed - 1000);
             });
-
         }
 
         function killer_start()
@@ -169,7 +327,7 @@
         }
 
         function set_score () {
-            $('#score').text(scoreNumber)
+            $('#score').text(score)
         }
 
         function mario_down() {
@@ -179,6 +337,9 @@
                 $("#mario_block").hide(500);
                 $jump = true;
                 score = 0; // 마리오가 죽는 순간 점수 초기화
+                $('#main').css("display", "none");
+                $('#gameover').css("display", "block");
+                //close(); -> 마리오 죽었을 시 게임오버 화면
             }
         }
 
@@ -191,8 +352,9 @@
 
             console.log(beat1-beat2);
 
-            if(beat1-beat2 < 50)
+            if(beat1-beat2 < 50 && killer == true)
             {           
+                score += 150;
                 console.log('굼바다운');     
                 killer = false;
                 $("#killer_block").hide(); 
@@ -207,7 +369,210 @@
             }
         }
 
+        //제이쿼리에서 버튼을 클릭했을 때, 화면을 전환할 수 있는 코드
+      $(document).on("click", "button[name='regame']", function() {
+            $('#main').css("display", "block");
+            $('#gameover').css("display", "none");
+      }); 
+      
+      $(document).on("click", "button[name='start']", function() {
+            $('#first').css("display", "none");
+            $('#main').css("display", "block");
+
+      });
+
+
         $(function () {
+            $("body").keydown(function (event) {
+
+
+                if (event.keyCode == "32" && jump == false) {
+                    jump = true;
+                    $("#mario_block")
+                        .animate({
+                            "bottom": "200px"
+                        }, 500)
+                        .animate({
+                            "bottom": "10px"
+                        }, 500, function () {
+                            jump = false;
+                        });
+                }
+
+                if (event.keyCode == '13' && killer == false){
+                    killer_start(); //버튼을 눌렀을 때, killer_start() 를 작동시켜줌.
+                }
+
+
+
+                /*
+                <<시행착오>>
+
+                // if (event.keyCode == "32" && beat1-beat2 < 50) {
+                //     scoreNumber += 150;
+                // } -> 키보드를 누른 순간, 킬러와 굼바는 만날 수 없기 때문에 
+                // 점수를 매길 수 없다.
+
+                
+                // if (event.keyCode == "13" &&  jump == true) {
+                //     scoreNumber += 100;
+                // }  -> 키보드를 누른 순간, 굼바와 마리오는 만날 수 없다.
+                */
+            })
+
+            setTimeout(gumba_start, 1000);  
+            setInterval(mario_down, 10);
+            setInterval(gumba_down, 10);
+            setInterval(set_score, 10);
+        })
+
+/*
+
+//
+
+<<<선생님 코드>>>
+
+<body>
+
+        <div id="main">
+
+            <div id="mario_block"><img id="mario" src="man.gif"></div>
+            <div id="gumba_block"><img id="gumba" src="gb.gif"></div>
+            <div id="killer_block"><img id="killer" src="killer.jpeg"></div>
+            <div id="score">점수 :
+            </div>
+
+        </div>
+
+        <div id="close">
+            게임오버<br/>
+            <button class="start">게임다시하기</button>
+        </div>
+
+        <div id="start">
+            자바스크립트 마리오
+            <br/>
+            개발자 송동민
+            <br/>
+            <button class="start">게임시작</button>
+        </div>
+
+    </body>
+
+    <script>
+        var jump = false;
+        var killer = false;
+        var score = 0;
+
+        function start() { //시작화면
+
+            $("#start").show();
+            $("#main").hide();
+            $("#close").hide();
+
+        }
+
+        function close() { // 게임오버 화면
+
+            $("#start").hide();
+            $("#main").hide();
+            $("#close").show();
+        }
+
+        function game() { //게임중 화면
+
+            $("#start").hide();
+            $("#main").show();
+            $("#close").hide();
+
+            score = 0;
+
+            setTimeout(gumba_start, 1000);
+            setInterval(mario_down, 10);
+            setInterval(gumba_down, 10);
+            setInterval(set_score, 10);
+        }
+
+        function gumba_start() {
+            $("#mario_block").show(100);
+            $jump = false;
+
+            let random_speed = Math.floor(Math.random() * 1000 + 2000);
+            $("#gumba_block").show();
+
+            $("#gumba_block").animate({
+                "left": "0px"
+            }, random_speed, function () {
+
+                let alive = $("#mario_block").css("display"); //block 이면 생존 none 이면 사망
+
+                if (alive == "block") {
+                    score = score + 100;
+                }
+                $("#gumba_block").css("left", ""); //초기화
+                $("#gumba_block").css("right", "10px");
+                $("#gumba_block").hide();
+                setTimeout(gumba_start, random_speed - 1000);
+            });
+
+        }
+
+        function killer_start() {
+            $("#killer_block").show(30);
+            killer = true;
+            $("#killer_block").animate({
+                "left": "950px"
+            }, 1000, function () {
+                killer = false;
+                $("#killer_block").hide();
+                $("#killer_block").css("left", "50px");
+            })
+
+        }
+
+        function set_score() {
+            $("#score").text("점수 : " + score);
+
+        }
+
+        function mario_down() {
+            var beat = Number($("#gumba_block").css("left").replace("px", ""));
+            if (beat <= 110 && jump == false) {
+                $("#mario_block").hide();
+                $jump = true;
+                score = 0;
+                close();
+            }
+        }
+
+        function gumba_down() {
+            var beat1 = Number($("#gumba_block").css("left").replace("px", ""));
+            var beat2 = Number($("#killer_block").css("left").replace("px", ""));
+            let random_speed = Math.floor(Math.random() * 1000);
+
+            if (beat1 - beat2 < 50 && killer == true) {
+                score = score + 150;
+                killer = false;
+                $("#killer_block").hide();
+                $("#killer_block").css("left", "50px");
+
+                $("#gumba_block").stop();
+
+                $("#gumba_block").css("left", "");
+                $("#gumba_block").css("right", "10px");
+                $("#gumba_block").hide();
+                setTimeout(gumba_start, random_speed - 1000);
+            }
+        }
+
+        $(function () {
+
+            start();
+
+            $(".start").click(function () {
+                game();
+            })
+
             $("body").keydown(function (event) {
 
                 if (event.keyCode == "32" && jump == false) {
@@ -223,23 +588,17 @@
                         });
                 }
 
-                // if (event.keyCode == "32" && beat1-beat2 < 50) {
-                //     scoreNumber += 150;
-                // } -> 키보드를 누른 순간, 킬러와 굼바는 만날 수 없기 때문에 
-                // 점수를 매길 수 없다.
-
-                
-                // if (event.keyCode == "13" &&  jump == true) {
-                //     scoreNumber += 100;
-                // }  -> 키보드를 누른 순간, 굼바와 마리오는 만날 수 없다.
+                if (event.keyCode == "13" && killer == false) {
+                    killer_start();
+                }
 
             })
 
-            setTimeout(gumba_start, 1000);  
-            setInterval(mario_down, 10);
-            setInterval(gumba_down, 10);
-            setInterval(set_score, 10);
         })
+*/
+
     </script>
 
 </html>
+
+
