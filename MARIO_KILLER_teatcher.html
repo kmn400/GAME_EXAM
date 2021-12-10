@@ -1,0 +1,245 @@
+<html>
+    <head>
+        <title>mario</title>
+
+        <script
+            src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+    </head>
+    <style>
+
+        #mario {
+            width: 100px;
+        }
+
+        #gumba {
+            width: 50px;
+        }
+
+        #killer {
+            width: 100px;
+        }
+
+        #main {
+            margin: auto;
+            border: 1px solid #000;
+            width: 950px;
+            height: 100%;
+            position: relative;
+        }
+        #mario_block {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+        }
+        #gumba_block {
+            position: absolute;
+            display: none;
+            right: 10px;
+            bottom: 10px;
+        }
+        #killer_block {
+            display: none;
+            position: absolute;
+            left: 50px;
+            bottom: 10px;
+        }
+        #num {
+            position: absolute;
+            top: 50%;
+            left: 40%;
+        }
+    </style>
+    <body>
+
+        <div id="main">
+            <div id = 'num'>점수 : <input type="text" id="score"/></div>
+            <div id="mario_block"><img id="mario" src="man.gif"></div>
+            <div id="gumba_block"><img id="gumba" src="gb.gif"></div>
+            <div id="killer_block"><img id="killer" src="killer.jpeg"></div>
+        </div>
+        
+    </body>
+    <script>
+        /*
+        
+        <킬러가 굼바와 만났을 때 굼바 죽게 하기>
+
+         - 초기화(마리오가 점프했을 때, 또 점프하는 것을 방지하는 것과 같은 역할)
+         - 군바 위치를 알아야 함
+         - 킬라 위치를 알아야 함
+         - 콘솔로그를 활용해 두 위치 차이를 확인
+         - 굼바가 죽으면 킬러가 사라짐
+         - 굼바 사라짐
+
+        */
+
+        /*
+        
+        <점수 매기기>
+        - 우선 div로 score 내용과 위치를 꾸린다.
+
+            -> 변수인 점수를 HTML에 위치한 DIV에 넣는 방법
+
+            function set_score(){
+                $("#score").text("점수 : "+score);}            //선택자를 활용해서 html에 점수를 넣었음
+        
+        - 마리오가 점프해서 득점한 순간을 어떻게 판단할 것인가. 
+            //나는 '점프'가 중요하다고 생각해서 여기에 포커스를 맞추고 생각함.
+            //그러나 문제의 핵심은, 마리오가 득점한 순간임.
+            //고로, 선생님은 마리오가 죽지 않고, 굼바가 행동을 마쳤을 때를 조건으로 생각함.
+
+            -> 굼바가 시작하는 함수에서 점수를 매김
+               : 마리오가 점프를 하기 위해선, 굼바가 등장해야 하기 때문임. 전제 조건 자체에 굼바가 필요함.
+
+            -> 마리오 생사 유무를 판단하는 방법 
+
+            let alive = $("#mario_block").css("display");  //block 이면 생존 none 이면 사망인데 이걸 콘솔로그로 확인하면 됨
+
+            -> 굼바가 행동을 마쳤을 때 조건을 확인하는 방법
+
+            ???
+
+        - 킬러로 굼바를 죽이고 득점한 순간을 어떻게 판단할 것인가.
+            //굼바가 죽는 것이 조건이기 때문에 굼바가 죽은 함수에서 점수를 매김.
+
+            -> 굼바와 킬러가 마주한 거리를 계산해야 굼바의 죽음을 확인할 수 있음.
+            
+            beat1-beat2 < 50
+
+            -> 사후 조치
+             // 굼바도 죽고 킬러도 죽어야 함. 
+                $("#killer_block").hide(); 
+                $("#killer_block").css("left","50px"); 
+
+                $("#gumba_block").css("left", "");
+                $("#gumba_block").css("right", "10px"); //초기화
+                $("#gumba_block").hide(); // 왜 순서가 다르지?? -> 순서는 크게 다르지 않다.
+
+                setTimeout(gumba_start, random_speed - 1000); //점수를 얻으면 굼바를 다시 시작함.
+
+             // 제이쿼리에서 'hide'와 'show'를 활용하여 굼바와 킬러의 생사 유무를 표현함.
+
+
+        - 마리오가 죽으면 점수 초기화
+            //간단하게 해결할 수 있음.
+
+            마리오가 죽은 걸 나타내는 함수에
+
+                score = 0;
+
+            을 넣어주면, 마리오가 죽은 경우, score 값이 0으로 돌아감.
+                
+        */
+
+
+
+        var jump = false;
+        var killer = false;
+        var scoreNumber = 0;
+        function gumba_start() {
+            $("#mario_block").show(100);
+            $jump = false;
+
+            let random_speed = Math.floor(Math.random() * 1000 + 2000 );
+            $("#gumba_block").show();
+
+            $("#gumba_block").animate({
+                "left": "0px"
+            }, random_speed, function () {
+                $("#gumba_block").css("left", "");
+                $("#gumba_block").css("right", "10px");
+                $("#gumba_block").hide();
+                setTimeout(gumba_start, random_speed - 1000);
+            });
+
+        }
+
+        function killer_start()
+        {
+            $("#killer_block").show(30);
+            killer = true;
+            $("#killer_block").animate({"left":"950px"},1000,function(){
+                killer = false;
+                $("#killer_block").hide(); 
+                $("#killer_block").css("left","50px");
+            }) 
+
+        }
+
+        function set_score () {
+            $('#score').text(scoreNumber)
+        }
+
+        function mario_down() {
+            var beat = Number($("#gumba_block").css("left").replace("px", ""));
+            if (beat <= 110 &&  beat > 90 && jump == false) {
+                console.log(beat, jump);
+                $("#mario_block").hide(500);
+                $jump = true;
+                score = 0; // 마리오가 죽는 순간 점수 초기화
+            }
+        }
+
+        function gumba_down()
+        { 
+            var beat1 = Number($("#gumba_block").css("left").replace("px", ""));
+            var beat2 = Number($("#killer_block").css("left").replace("px", ""));
+            let random_speed = Math.floor(Math.random() * 1000);
+ 
+
+            console.log(beat1-beat2);
+
+            if(beat1-beat2 < 50)
+            {           
+                console.log('굼바다운');     
+                killer = false;
+                $("#killer_block").hide(); 
+                $("#killer_block").css("left","50px");
+
+                $("#gumba_block").stop();
+
+                $("#gumba_block").css("left", "");
+                $("#gumba_block").css("right", "10px");
+                $("#gumba_block").hide();
+                setTimeout(gumba_start, random_speed - 1000);
+            }
+        }
+
+        $(function () {
+            $("body").keydown(function (event) {
+
+                if (event.keyCode == "32" && jump == false) {
+                    jump = true;
+                    $("#mario_block")
+                        .animate({
+                            "bottom": "200px"
+                        }, 500)
+                        .animate({
+                            "bottom": "10px"
+                        }, 500, function () {
+                            jump = false;
+                        });
+                }
+
+                // if (event.keyCode == "32" && beat1-beat2 < 50) {
+                //     scoreNumber += 150;
+                // } -> 키보드를 누른 순간, 킬러와 굼바는 만날 수 없기 때문에 
+                // 점수를 매길 수 없다.
+
+                
+                // if (event.keyCode == "13" &&  jump == true) {
+                //     scoreNumber += 100;
+                // }  -> 키보드를 누른 순간, 굼바와 마리오는 만날 수 없다.
+
+            })
+
+            setTimeout(gumba_start, 1000);  
+            setInterval(mario_down, 10);
+            setInterval(gumba_down, 10);
+            setInterval(set_score, 10);
+        })
+    </script>
+
+</html>

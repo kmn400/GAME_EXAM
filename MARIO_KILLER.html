@@ -1,0 +1,137 @@
+<html>
+    <head>
+        <title>MARIOGAME_REPEAT</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous">
+        </script>
+    </head>
+    <style>
+        #bg{
+            border:1px solid black;
+            width:80%;
+            height:80%;
+            position:relative;
+        }
+
+        #mario{
+            width:100px;
+        }
+
+        #mario_block{
+            background-color: red;
+            position: absolute;
+            left:10px;
+            bottom:10px;
+        }
+
+        #gb{
+            width:40px;
+        }
+
+        #gb_block{
+            background-color: blue;
+            position: absolute;
+            right:-10px;
+            bottom:10px;
+        }
+
+        #killer{
+            width:60px;
+        }
+
+        #k_block{
+            
+            display: none;
+            position: absolute;
+            left:50px;
+            bottom:10px;
+        }
+
+    </style>
+    <body>
+        <div id = 'bg'>
+            <div id = 'mario_block'><img id = 'mario' src = 'man.gif'/></div>
+            <div id = 'gb_block'><img id = 'gb' src = 'gb.gif'/></div>
+            <div id = 'k_block'><img id = 'killer' src = 'killer.jpeg'/></div>
+        </div>
+        
+    </body>
+    <script>
+        var jump = 0;
+        var killer = false;
+
+        function gumba_start() {
+            let random_speed = Math.floor(Math.random() * 1000 + 2000);
+            $('#gb_block').show();
+            $('#gb_block').animate({
+                'left':'0px'
+            }, random_speed, function(){
+                $('#gb_block').css('left','');
+                $('#gb_block').css('right', '-10px');
+                $('#gb_block').hide();
+                setTimeout(gumba_start, random_speed - 1000);
+            })
+        }
+        function k_start () {
+            $('#k_block').show(30);//? 30은 무슨 의미임? -> 키를 누르고 딜레이를 걸어줌
+            killer = true; //이건 무슨뜻? -> 초기화한다는 뜻. 예를 들어 마리오가 점프를 했는데 또 점프를 하는 걸 방지
+            $('#k_block').animate({'left':'950px'/*사정거리*/},1000,function(){
+                killer = false;
+                $('#k_block').hide();
+                $('#k_block').css('left', '50px');
+            })
+            
+        }
+
+        function mario_down() {
+            var beat = Number($('#gb_block').css('left').replace('px',''));
+            if(beat <=100 && beat > 90 &&  jump == 0) {
+                console.log(beat, jump);
+                alert('마리오 죽음');
+            }
+        }
+
+        function gumba_down() {
+            //굼바의 위치를 파악하기 위한 것
+            var beat1 = Number($('#gb_block').css('left').replace('px',''));
+            //킬러의 위치를 파악하기 위한 것
+            var beat2 = Number($('#k_block').css('left').replace('px',''));
+            let random_speed = Math.floor(Math.random() *1000);
+            console.log(beat1 - beat2); //굼바와 킬러 간격을 파악
+
+            if(beat1 - beat2 < 50){
+
+                console.log('굼바다운');
+                killer = false;
+                $('#k_block').hide(); // 숨기고 나서
+                $('#k_block').css('left','50px'); // 레프트 50px를 준 이유? -> 초기화
+
+                $('#gb_block').stop();
+
+                $('#gb_block').css('left', ''); //초기화
+                $('#gb_block').css('right', '10px'); // 다시 시작
+                $('#gb_block').hide();
+                setTimeout(gumba_start, random_speed - 1000);
+            }
+        }
+        $('body').keydown(function(event){
+            console.log(event.keyCode);
+            if(event.keyCode == '37' && jump == 0){
+                $('#gb_block').show();
+                $('#gb_block').css('left', '-=10px');
+                console.log($('#gb_block').css('left'))
+            }
+            if (event.keyCode == "13" && killer == false) {
+                    k_start(); //엔터 누르면 재시작
+                }
+            if(event.keyCode == '32' && jump == 0){
+                jump = 1;
+                $('#mario_block').animate({'bottom':'100px'}, 200).animate({'bottom':'10px'}, 200, function(){
+                    jump = 0;
+                }); 
+            }
+    });
+    setTimeout(gumba_start, 1000);
+    setInterval(mario_down, 50);
+    setInterval(gumba_down, 10);
+    </script>
+</html>
