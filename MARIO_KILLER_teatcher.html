@@ -257,6 +257,30 @@
         var jump = false;
         var killer = false;
         var score = 0;
+        var scores = [100, 300, 500];
+        var ids = ['aaa', 'bbb', 'ccc'];
+        var ranking = [{
+                name: 'aaa',
+                score: 100,
+            },
+            {
+                name: 'aaa',
+                score: 100,
+            },
+            {
+                name: 'aaa',
+                score: 100,
+            }
+        ]; 
+        
+
+        function rank() {
+            let newPlayer = {
+                name: 'aaa',
+                score: 100,
+            };
+            ranking.append(newPlayer);
+        } 
 /*
         function start() { //시작화면
 
@@ -391,10 +415,10 @@
                     $("#mario_block")
                         .animate({
                             "bottom": "200px"
-                        }, 500)
+                        }, 100)
                         .animate({
                             "bottom": "10px"
-                        }, 500, function () {
+                        }, 100, function () {
                             jump = false;
                         });
                 }
