@@ -7,86 +7,249 @@
             crossorigin="anonymous"></script>
     </head>
     <style>
-        #bg1 {
-            border: 1px solid black;
+        #main {
+            margin: auto;
+            display: none;
+            border: 1px solid #000;
             width: 100%;
             height: 100%;
             position: relative;
         }
         #mario_block {
-            background-color: red;
             position: absolute;
-            left: 10px;
+            left:10px;
+            bottom:10px;
+        }
+        #gumba_block {
+            position: absolute;
+            display: none;
+            right: 10px;
             bottom: 10px;
         }
-        #gb_block {
-            background-color: blue;
+        #killer_block {
+            display: none;
+            position: absolute;
+            left: 50px;
+            bottom: 10px;
+        }
+        #mario {
+            width: 100px;
+        }
+        #gumba {
+            width: 50px;
+        }
+        #killer {
+            width: 100px;
+        }
+        #score1 {
+            position : absolute;
+            top : 50%;
+            left: 40%;
+        }
+        #score2 {
+            position : absolute;
+            top : 50%;
+            left: 47%;
+        }
+        #first {
+            position: absolute;
+            display: '';
+            margin: auto;
+            border: 1px solid #000;
+            width: 100%;
+            height: 100%;
+        }
+        #firsttext {
+            position : absolute;
+            top : 20%;
+            left: 40%;
+            font-size: xx-large;
+        }
+        #secondtext{
+            position: absolute;
+            top : 28%;
+            left: 40%;
+            font-size: xx-large;
+        }
+        #firstimg {
+            position: absolute;
+            top: 40%;
+            left:42%;
+        }
+        #start1 {
+            position: absolute;
+            top : 69%;
+            left: 45%;
+            size: 15rem;
+            height: 50px;
+            width: 150px;
+        }
+        #grey {
+            width : 200px;
+        }
+        #gameover {
             position:absolute;
-            right: -10px;
-            bottom: 10px;
+            display: none;
+            margin: auto;
+            border: 1px solid #000;
+            width: 100%;
+            height: 100%;
         }
-        #gb{
-            width:40px;
+        #text {
+            position: absolute;
+            top: 50%;
+            left: 46.5%;
+            font-size: xx-large;
         }
-        #man {
-            width:100px;
+        #regame1 {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            size: 15rem;
         }
+
     </style>
     <body>
-        <div id='bg1'>
-            <div id='mario_block'><img id='man' src='man.gif'/></div>
-            <div id= 'gb_block'><img id='gb' src="gb.gif"/></div>
+        <div id='main'>
+            <div id='score1'>점수 :</div>
+            <div id='score2'></div>
+            <div id='mario_block'><img id='mario' src='man.gif'></div>
+            <div id='gumba_block'><img id = 'gumba' src='gb.gif'></div>
+            <div id='killer_block'><img id='killer' src='killer.jpeg'></div>
+        </div>
+        <div id = 'first'>
+            <p id = 'firsttext'>자바스크립트 마리오</p>
+            <p id = 'secondtext'>개발자 : 김민호</p>
+            <div id = 'firstimg'><img id = 'grey' src = '그레이몬.png'></div>
+            <button name = 'start' id = 'start1'>시작하기</button>
+        </div>
+        <div id = 'gameover'>
+            <p id = 'text'>GAME OVER</p>
+            <button name = 'regame' id = 'regame1'>다시 하기</button>
         </div>
     </body>
     <script>
-        var jump=0;
-        //군바 스타트
-        function gunba_start() {
+        var jump = false;
+        var killer = false;
+        var score = 0;
+        var scores = [100, 300, 500];
+        var ids =  ['aaa', 'bbb', 'ccc'];
+        var ranking = [{
+                
+        }];
+
+        function rank() {
+            let newPlayer = {
+                name: 'aaa',
+                score: 100,
+            };
+            ranking.append(newplayer);
+        }
+
+        function set_score () {
+            $('#score2').text(score);
+        }
+ 
+        $(document).on('click', "button[name='regame']", function() {
+            $('#main').css('display', 'block');
+            $('#gameover').css('display', 'none');
+        } );
+
+        $(document).on('click', "button[name='start']", function() {
+            $('#first').css("display", 'none');
+            $('#main').css('display', 'block');
+        });
+
+        function gumba_start() {
+            $('#mario_block').show(100);
+            $jump = false;
+
             let random_speed = Math.floor(Math.random() * 1000 + 2000);
-            $('#gb_block').show();
-            $('#gb_block').animate({
-                'left': '0px'
-            }, random_speed, function() {
-                $('#gb_block').css('left','');
-                $('#gb_block').css('right', '-10px');
-                $('#gb_block').hide();
-                setTimeout(gunba_start, random_speed - 1000);
-            });
+            $('#gumba_block').show();
+
+            $('#gumba_block').animate({
+                'left':'0px'
+            }, random_speed, function () {
+                let alive = $('#mario_block').css('display');
+                if(alive == 'block') {
+                    score += 100;
+                } 
+                $('#gumba_block').css('left', '');
+                $('#gumba_block').css('right', '10px');
+                $('#gumba_block').hide();
+                setTimeout(gumba_start, random_speed -1000);
+            })
         }
 
-        //마리오에 군바가 닿았을 때, 마리오 사망창 뜨게 하는 함수
-        function mario_down() {
-            var beat = Number($('#gb_block').css('left').replace('px', ''));
-            if (beat <= 110 && beat > 80 && jump == 0) {
-                console.log(beat, jump);
-                alert('마리오 사망');
-            }
-        }
-
-        $('body').keydown(function (event) {
-            //콘솔 로그에서 키값을 확인할 수 있는 방법
-            console.log(event.keyCode);
-            // 37번 if문은 마리오에 군바가 닿는 위치를 파악하는 것. 따로 캐릭터에 미치는 영향은 없음.
-            if (event.keyCode == "37" && jump == 0) {
-                $("#gb_block").show();
-                $("#gb_block").css("left", "-=10px");
-                console.log($("#gb_block").css("left"))
-            }
-            if (event.keyCode == '32' && jump == 0) {
-                jump = 1;
-                $('#mario_block')
+        $(function () {
+            $('body').keydown(function (event) {
+                console.log(event.keyCode);
+                if (event.keyCode == '32' && jump == false) {
+                    jump = true; 
+                    $('#mario_block')
                     .animate({
-                        'bottom': '100px'
-                    }, 200)
+                        'bottom' : '100px'
+                    }, 150)
                     .animate({
-                        'bottom': '10px'
-                    }, 200, function () {
-                        jump = 0;
+                        'bottom' : '10px'
+                    }, 100, function() {
+                        jump = false;
                     });
+                }
+                if(event.keyCode == '13' && killer == false) {
+                    killer_start();
+                }
+            })
+        })
+
+        function mario_down() {
+            var beat = Number($("#gumba_block").css("left").replace("px", ""));
+            if (beat <= 110 &&  beat > 90 && jump == false) {
+                console.log(beat, jump);
+                $("#mario_block").hide(500);
+                $jump = true;
+                score = 0; 
+                $('#main').css("display", "none");
+                $('#gameover').css("display", "block");
             }
-        });      
-        setTimeout(gunba_start, 1000);
-        //마리오가 사망했는지 여부를 실시간으로 확인해주는 함수.
+        }
+
+        function killer_start()
+        {
+            $('#killer_block').show(30);
+            killer = true;
+            $('#killer_block').animate({'left':'950px'},1000,function(){
+                killer = false;
+                $('#killer_block').hide()
+                $('#killer_block').css('left', '50px');
+            })
+        }
+        
+        function gumba_down() {
+            var beat1 = Number($('#gumba_block').css('left').replace('px', ''));
+            var beat2 = Number($('#killer_block').css('left').replace('px',''));
+            let random_speed = Math.floor(Math.random() * 1000);
+
+            console.log(beat1 - beat2);
+            
+            if(beat1 - beat2 < 50 && killer == true){
+                score += 150;
+                console.log('굼바다운');
+                killer = false;
+                $('#killer_block').hide();
+                $('#killer_block').css('left','50px');
+
+                $('#gumba_block').stop();
+                $('#gumba_block').css('left', '');
+                $('#gumba_block').css('right', '10px');
+                $('#gumba_block').hide();
+                setTimeout(gumba_start, random_speed - 1000);
+            }
+        }
+
+        setTimeout(gumba_start, 1000); 
         setInterval(mario_down, 50);
+        setInterval(gumba_down, 50);
+        setInterval(set_score, 50);
     </script>
 </html>
